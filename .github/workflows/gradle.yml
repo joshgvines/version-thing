@@ -1,0 +1,40 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
+
+name: Java CI with Gradle
+
+on:
+  push:
+    branches: [ "master", "develop", "feature/**", "bugfix/**", "hotfix/**" ]
+  pull_request:
+    branches: [ "master", "develop" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: 1. Check out code
+      uses: actions/checkout@v3 # https://github.com/actions/checkout
+
+    - name: 2. Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: gradle
+
+    - name: 3. Verify Gradle Wrapper
+      uses: gradle/wrapper-validation-action@v1.0.4
+
+    - name: 4. Build with Gradle
+      run: ./gradlew build
